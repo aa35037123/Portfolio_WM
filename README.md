@@ -1,13 +1,49 @@
 
-<div align="center">
+<!-- <div align="center">
   <img src="src/assets/astrogon-logo.svg" style="width:80%;" alt="Astrogon Logo" align="center" />
-</div>
+</div> -->
 
----
+<!-- --- -->
 
-[![GitHub License](https://img.shields.io/github/license/astrogon/astrogon?color=red)](https://github.com/astrogon/astrogon/blob/main/LICENSE) [![Repo Size](https://img.shields.io/github/repo-size/astrogon/astrogon)](https://github.com/astrogon/astrogon) ![GitHub branch check runs](https://img.shields.io/github/check-runs/astrogon/astrogon/main) [![Website](https://img.shields.io/website?up_message=online&up_color=limegreen&down_message=offline&down_color=yellow&url=https%3A%2F%2Fastrogon.reednel.com%2F)](https://astrogon.reednel.com/)
+<!-- [![GitHub License](https://img.shields.io/github/license/astrogon/astrogon?color=red)](https://github.com/astrogon/astrogon/blob/main/LICENSE) [![Repo Size](https://img.shields.io/github/repo-size/astrogon/astrogon)](https://github.com/astrogon/astrogon) ![GitHub branch check runs](https://img.shields.io/github/check-runs/astrogon/astrogon/main) [![Website](https://img.shields.io/website?up_message=online&up_color=limegreen&down_message=offline&down_color=yellow&url=https%3A%2F%2Fastrogon.reednel.com%2F)](https://astrogon.reednel.com/) -->
 
-Astrogon is a rapidly-customizable multipurpose website template built using Astro JS, Tailwind, and a sprinkle of React.
+Hello, this is portfolio website developed by Wesley & Ching.
+  
+This is forked by [Astrogon](https://github.com/astrogon/astrogon), which is a rapidly-customizable multipurpose website template built using Astro JS, Tailwind, and a sprinkle of React.
+
+## Usage
+
+### Run Locally with Docker
+
+Build and start the local Astro development server:
+
+```sh
+docker compose up --build web
+```
+
+Open the site at:
+
+```text
+http://localhost:4321
+```
+
+Stop the local server with `Ctrl+C`.
+
+### Build Locally with Docker
+
+Build the production output:
+
+```sh
+docker build --target build -t portfolio-wm-build .
+```
+
+### Preview Production Build
+
+Preview the Cloudflare/Wrangler build locally:
+
+```sh
+docker compose up --build preview
+```
 
 ## Features
 
