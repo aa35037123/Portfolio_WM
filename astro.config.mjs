@@ -15,6 +15,13 @@ export default defineConfig({
   site: "https://janedoe.com",
   base: "/",
   trailingSlash: "ignore",
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+      },
+    },
+  },
   prefetch: {
     prefetchAll: true
   },

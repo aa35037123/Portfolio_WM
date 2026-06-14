@@ -1,5 +1,5 @@
 ---
-title: Hey, I'm Wei Che Hsu!
+title: Hey, I'm Ching!
 description: this is meta description
 image: "@assets/profile/jane-doe.jpg"
 draft: false
