@@ -18,7 +18,13 @@ This is forked by [Astrogon](https://github.com/astrogon/astrogon), which is a r
 Build and start the local Astro development server:
 
 ```sh
-docker compose up --build web
+make all
+```
+
+If the image is already built, you can start it without rebuilding:
+
+```sh
+make run
 ```
 
 Open the site at:
@@ -34,7 +40,7 @@ Stop the local server with `Ctrl+C`.
 Build the production output:
 
 ```sh
-docker build --target build -t portfolio-wm-build .
+make build
 ```
 
 ### Preview Production Build
@@ -42,7 +48,7 @@ docker build --target build -t portfolio-wm-build .
 Preview the Cloudflare/Wrangler build locally:
 
 ```sh
-docker compose up --build preview
+make preview
 ```
 
 ## Features
