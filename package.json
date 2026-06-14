@@ -1,15 +1,18 @@
 {
-  "name": "Astrogon",
+  "name": "portfolio-wm",
   "version": "1.0.0",
   "description": "Template.",
-  "author": "Jane Doe",
+  "author": "Wesley",
   "license": "MIT",
   "packageManager": "npm@10.8.2",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "postbuild": "pagefind --site dist",
-    "format": "prettier -w ./src"
+    "format": "prettier -w ./src",
+    "preview": "astro preview",
+    "preview:cf": "astro build && wrangler dev",
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.4",
