@@ -3,11 +3,11 @@ import BaseLayout from "@components/base/BaseLayout.astro";
 import PageHeader from "@components/common/PageHeader.astro";
 import { upperHumanize } from "@lib/textConverter";
 import BlogCard from "@components/blog/Card.astro";
-import type { BlogEntry } from "@/types";
+import type { SanityPostListItem } from "@lib/sanity";
 
 interface Props {
   taxon: string;
-  entries: BlogEntry[];
+  entries: SanityPostListItem[];
 }
 
 const { taxon, entries }: Props = Astro.props;

@@ -1,23 +1,163 @@
 ---
-import type { BlogEntry } from "@/types";
-import { sortByDate } from "@lib/sortFunctions";
-import EntryLayout from "@components/blog/EntryLayout.astro";
-import { getEntries } from "@lib/contentParser";
-import similerItems from "@lib/similarItems";
+import { PortableText } from "astro-portabletext";
+import BaseLayout from "@components/base/BaseLayout.astro";
+import BlogCard from "@components/blog/Card.astro";
+import Share from "@components/common/Share.astro";
+import { formatDate } from "@lib/formatDate";
+import {
+  getSanityPost,
+  getSanityPostSlugs,
+  getSanityPosts,
+  urlFor,
+} from "@lib/sanity";
+import { slugify, upperHumanize } from "@lib/textConverter";
+import {
+  FaRegCalendarAlt,
+  FaRegFolder,
+  FaRegUserCircle,
+  FaHashtag,
+} from "react-icons/fa";
 
 export async function getStaticPaths() {
-  const entries = (await getEntries("blog", sortByDate)) as BlogEntry[];
-  const paths = entries.map((entry) => ({
-    params: {
-      entry: entry.id,
-    },
-    props: { entry, entries },
-  }));
-  return paths;
+  return await getSanityPostSlugs();
 }
 
-const { entry, entries } = Astro.props;
-const relatedEntries = similerItems(entry, entries, entry.id);
+const { entry } = Astro.params;
+const post = entry ? await getSanityPost(entry) : null;
+
+if (!post) {
+  return Astro.redirect("/404");
+}
+
+const posts = await getSanityPosts();
+const relatedEntries = posts
+  .filter((candidate) => candidate.slug !== post.slug)
+  .filter((candidate) => {
+    const postCategories = new Set(
+      post.categories?.map((category) => category.slug),
+    );
+    return candidate.categories?.some(
+      (category) => category.slug && postCategories.has(category.slug),
+    );
+  })
+  .slice(0, 2);
+
+const imageUrl = post.mainImage
+  ? urlFor(post.mainImage)
+      .width(1200)
+      .height(630)
+      .fit("crop")
+      .auto("format")
+      .url()
+  : undefined;
 ---
 
-<EntryLayout entry={entry} relatedEntries={relatedEntries} />
+<BaseLayout
+  title={post.title ?? "Post"}
+  description={post.description}
+  image={imageUrl}
+>
+  <section class="flex container p-4">
+    <div class="w-full">
+      <article>
+        <section>
+          <div
+            class="glass mb-8 p-4 rounded-lg intersect:animate-fade opacity-0 intersect-no-queue"
+          >
+            <h1 class="mb-4">{post.title}</h1>
+            <ul>
+              {
+                post.author?.name && (
+                  <li class="mr-1 inline-block">
+                    <FaRegUserCircle className={"-mt-1 inline-block"} />
+                    {post.author.name}
+                  </li>
+                )
+              }
+              {
+                post.publishedAt && (
+                  <li class="mr-1 inline-block">
+                    <FaRegCalendarAlt className={"ml-2 -mt-1 inline-block"} />
+                    {formatDate(post.publishedAt)}
+                  </li>
+                )
+              }
+              {
+                post.categories && (
+                  <li class="mr-1 inline-block">
+                    {post.categories.map(
+                      (category) =>
+                        category.title && (
+                          <a
+                            href={`/blog/categories/${category.slug ?? slugify(category.title)}`}
+                          >
+                            <FaRegFolder
+                              className={"ml-2 -mt-1 inline-block"}
+                            />
+                            {upperHumanize(category.title)}
+                          </a>
+                        ),
+                    )}
+                  </li>
+                )
+              }
+              {
+                post.tags && (
+                  <li class="mr-1 inline-block">
+                    {post.tags.map((tag) => (
+                      <a href={`/blog/tags/${slugify(tag)}`}>
+                        <FaHashtag className={"ml-2 -mt-1 inline-block"} />
+                        {tag}
+                      </a>
+                    ))}
+                  </li>
+                )
+              }
+            </ul>
+          </div>
+          {
+            imageUrl && (
+              <img
+                class="mb-4 aspect-video w-full rounded-lg object-cover"
+                src={imageUrl}
+                alt=""
+              />
+            )
+          }
+        </section>
+        <section class="content mb-4 glass px-4 rounded-lg">
+          {post.body && <PortableText value={post.body} />}
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <section class="container items-start justify-between mt-4">
+    <hr />
+    <div class="flex items-center justify-center lg:justify-end mt-4">
+      <Share
+        title={post.title ?? ""}
+        description={post.description}
+        folder={"blog"}
+        id={post.slug ?? ""}
+      />
+    </div>
+  </section>
+
+  {
+    relatedEntries.length > 0 && (
+      <section class="row justify-center my-8">
+        <h2 class="h3 mb-4 text-center">Related Posts</h2>
+        <div class="lg:col-10">
+          <div class="row justify-center">
+            {relatedEntries.map((entry) => (
+              <div class="md:col-6 px-4 py-2 h-min">
+                <BlogCard entry={entry} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>

@@ -1,19 +1,28 @@
 ---
 import CollectionLayout from "@components/blog/CollectionLayout.astro";
-import { getTaxaMultiset, getTaxa } from "@lib/taxonomyParser";
-import { getEntries, getIndex } from "@lib/contentParser";
-import { sortByDate } from "@lib/sortFunctions";
-import type { BlogEntry } from "@/types";
+import {
+  getSanityCategories,
+  getSanityPosts,
+  getSanityTags,
+} from "@lib/sanity";
 
 const { slug } = Astro.params;
 const currentPageIndex = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
 
-const entryIndex = (await getIndex("blog")) as BlogEntry;
-const entries = (await getEntries("blog", sortByDate)) as BlogEntry[];
-
-const allCategories = await getTaxaMultiset("blog", "categories");
-const categories = await getTaxa("blog", "categories");
-const tags = await getTaxa("blog", "tags");
+const entries = await getSanityPosts();
+const sanityCategories = await getSanityCategories();
+const categories = sanityCategories
+  .map((category) => category.slug ?? category.title ?? "")
+  .filter(Boolean);
+const allCategories = sanityCategories
+  .flatMap((category) =>
+    Array.from(
+      { length: category.count },
+      () => category.slug ?? category.title ?? "",
+    ),
+  )
+  .filter(Boolean);
+const tags = await getSanityTags();
 
 const entriesPerPage = 4;
 const indexOfLastEntry = currentPageIndex * entriesPerPage;
@@ -24,7 +33,8 @@ const pageCount: number = Math.ceil(entries.length / entriesPerPage);
 ---
 
 <CollectionLayout
-  entryIndex={entryIndex}
+  title="Blog"
+  description="Posts from Sanity"
   entries={currentEntries}
   categories={categories}
   tags={tags}

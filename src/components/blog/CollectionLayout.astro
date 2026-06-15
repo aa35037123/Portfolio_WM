@@ -4,11 +4,12 @@ import BlogCard from "@components/blog/Card.astro";
 import Pagination from "@components/common/Pagination.astro";
 import PageHeader from "@components/common/PageHeader.astro";
 import BlogSidebar from "@components/blog/Sidebar.astro";
-import type { BlogEntry } from "@/types";
+import type { SanityPostListItem } from "@lib/sanity";
 
 interface Props {
-  entryIndex: BlogEntry;
-  entries: BlogEntry[];
+  title: string;
+  description?: string;
+  entries: SanityPostListItem[];
   tags: string[];
   categories: string[];
   allCategories: string[];
@@ -17,7 +18,8 @@ interface Props {
 }
 
 const {
-  entryIndex,
+  title,
+  description,
   entries,
   tags,
   categories,
@@ -27,19 +29,25 @@ const {
 } = Astro.props;
 ---
 
-<BaseLayout title={entryIndex.data.title} description={entryIndex.data.description}>
-  <PageHeader title={entryIndex.data.title} />
+<BaseLayout title={title} description={description}>
+  <PageHeader title={title} />
   <section class="section">
     <div class="flex container">
       <div class="row px-0 mx-0 w-full">
         <!-- blog posts -->
         <div class="col-12 lg:col-8 lg:p-0">
           {
-            entries.map((entry) => (
-              <div class="mb-4">
-                <BlogCard entry={entry} />
+            entries.length > 0 ? (
+              entries.map((entry) => (
+                <div class="mb-4">
+                  <BlogCard entry={entry} />
+                </div>
+              ))
+            ) : (
+              <div class="glass rounded-lg p-4 m-2">
+                <p>No posts have been published yet.</p>
               </div>
-            ))
+            )
           }
           <Pagination
             collection="blog"

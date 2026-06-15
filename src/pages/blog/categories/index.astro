@@ -1,11 +1,20 @@
 ---
 import TaxaLayout from "@components/blog/TaxaLayout.astro";
-import { getTaxa, getTaxaMultiset } from "@lib/taxonomyParser";
+import { getSanityCategories } from "@lib/sanity";
 
-const collection = "blog";
 const taxonomy = "categories";
-const taxa = await getTaxa(collection, taxonomy);
-const allTaxa = await getTaxaMultiset(collection, taxonomy);
+const categories = await getSanityCategories();
+const taxa = categories
+  .map((category) => category.slug ?? category.title ?? "")
+  .filter(Boolean);
+const allTaxa = categories
+  .flatMap((category) =>
+    Array.from(
+      { length: category.count },
+      () => category.slug ?? category.title ?? "",
+    ),
+  )
+  .filter(Boolean);
 ---
 
 <TaxaLayout taxonomy={taxonomy} taxa={taxa} allTaxa={allTaxa} />

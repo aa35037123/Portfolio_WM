@@ -1,24 +1,13 @@
 ---
-import type { BlogEntry } from "@/types";
-import { getEntries } from "@lib/contentParser";
-import { getTaxa } from "@lib/taxonomyParser";
-import taxonomyFilter from "@lib/taxonomyFilter";
 import TaxonLayout from "@components/blog/TaxonLayout.astro";
+import { getSanityPostsByTag, getSanityTagSlugs } from "@lib/sanity";
 
 export async function getStaticPaths() {
-  const taxa = await getTaxa("blog", "tags");
-  const paths = taxa.map((taxon) => ({
-    params: {
-      tag: taxon,
-    },
-    props: { taxon },
-  }));
-  return paths;
+  return await getSanityTagSlugs();
 }
 
-const { taxon } = Astro.props;
-const entries = await getEntries("blog") as BlogEntry[];
-const filteredEntries: BlogEntry[] = taxonomyFilter(entries, "tags", taxon!);
+const { tag } = Astro.params;
+const filteredEntries = tag ? await getSanityPostsByTag(tag) : [];
 ---
 
-<TaxonLayout taxon={taxon} entries={filteredEntries} />
+<TaxonLayout taxon={tag ?? "Tag"} entries={filteredEntries} />

@@ -1,11 +1,11 @@
 ---
 import TaxaLayout from "@components/blog/TaxaLayout.astro";
-import { getTaxa, getTaxaMultiset } from "@lib/taxonomyParser";
+import { getSanityPosts, getSanityTags } from "@lib/sanity";
 
-const collection = "blog";
 const taxonomy = "tags";
-const taxa = await getTaxa(collection, taxonomy);
-const allTaxa = await getTaxaMultiset(collection, taxonomy);
+const taxa = await getSanityTags();
+const posts = await getSanityPosts();
+const allTaxa = posts.flatMap((post) => post.tags ?? []);
 ---
 
 <TaxaLayout taxonomy={taxonomy} taxa={taxa} allTaxa={allTaxa} />

@@ -1,0 +1,138 @@
+<div id="home-cursor-trail" aria-hidden="true"></div>
+
+<style>
+  #home-cursor-trail {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  #home-cursor-trail canvas {
+    display: block;
+  }
+</style>
+
+<script is:inline>
+  const loadP5 = () => {
+    if (window.p5) return Promise.resolve(window.p5);
+    if (window.__p5Loader) return window.__p5Loader;
+
+    window.__p5Loader = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js";
+      script.async = true;
+      script.onload = () => resolve(window.p5);
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+
+    return window.__p5Loader;
+  };
+
+  const startCursorTrail = async () => {
+    const mount = document.getElementById("home-cursor-trail");
+    if (!mount) return;
+
+    if (window.__homeCursorTrail?.cleanup) {
+      window.__homeCursorTrail.cleanup();
+    }
+
+    const P5 = await loadP5();
+    const points = [];
+    let lastPoint = null;
+    let sketch = null;
+
+    const addPoint = (p, x, y) => {
+      if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) {
+        lastPoint = null;
+        return;
+      }
+
+      const current = { x, y };
+      const previous = lastPoint || current;
+      const speed = p.dist(previous.x, previous.y, current.x, current.y);
+
+      points.push({
+        x1: previous.x,
+        y1: previous.y,
+        x2: current.x,
+        y2: current.y,
+        life: 1,
+        weight: p.constrain(speed * 0.12, 3, 16),
+        color: p.lerpColor(p.color(32, 214, 196), p.color(42, 139, 255), p.random(1)).levels,
+      });
+
+      if (points.length > 90) points.shift();
+      lastPoint = current;
+    };
+
+    sketch = new P5((p) => {
+      p.setup = () => {
+        const canvas = p.createCanvas(window.innerWidth, window.innerHeight);
+        canvas.parent(mount);
+        p.clear();
+      };
+
+      p.draw = () => {
+        p.clear();
+
+        for (let index = points.length - 1; index >= 0; index -= 1) {
+          const point = points[index];
+          point.life -= 0.018;
+          point.weight *= 0.985;
+
+          if (point.life <= 0) {
+            points.splice(index, 1);
+            continue;
+          }
+
+          const alpha = 250 * point.life;
+          const pulse = Math.sin((1 - point.life) * Math.PI);
+          p.stroke(point.color[0], point.color[1], point.color[2], alpha);
+          p.strokeWeight(point.weight + pulse * 4);
+          p.line(point.x1, point.y1, point.x2, point.y2);
+
+          p.noStroke();
+          p.fill(point.color[0], point.color[1], point.color[2], alpha * 0.38);
+          p.circle(point.x2, point.y2, point.weight * 1.9);
+        }
+      };
+
+      p.windowResized = () => {
+        p.resizeCanvas(window.innerWidth, window.innerHeight);
+        p.clear();
+      };
+    }, mount);
+
+    const handlePointerMove = (event) => addPoint(sketch, event.clientX, event.clientY);
+    const clearLastPoint = () => {
+      lastPoint = null;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerleave", clearLastPoint);
+
+    window.__homeCursorTrail = {
+      cleanup() {
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerleave", clearLastPoint);
+        sketch.remove();
+        window.__homeCursorTrail = null;
+      },
+    };
+  };
+
+  if (!window.__homeCursorTrailEvents) {
+    document.addEventListener("astro:page-load", startCursorTrail);
+    document.addEventListener("astro:before-swap", () => {
+      if (window.__homeCursorTrail?.cleanup) {
+        window.__homeCursorTrail.cleanup();
+      }
+    });
+    window.__homeCursorTrailEvents = true;
+  }
+
+  startCursorTrail();
+</script>
