@@ -1,10 +1,6 @@
 ---
 import CollectionLayout from "@components/blog/CollectionLayout.astro";
-import {
-  getSanityCategories,
-  getSanityPosts,
-  getSanityTags,
-} from "@lib/sanity";
+import { getSanityCategories, getSanityPosts } from "@lib/sanity";
 
 const { slug } = Astro.params;
 const currentPageIndex = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
@@ -22,7 +18,6 @@ const allCategories = sanityCategories
     ),
   )
   .filter(Boolean);
-const tags = await getSanityTags();
 
 const entriesPerPage = 4;
 const indexOfLastEntry = currentPageIndex * entriesPerPage;
@@ -37,7 +32,6 @@ const pageCount: number = Math.ceil(entries.length / entriesPerPage);
   description="Posts from Sanity"
   entries={currentEntries}
   categories={categories}
-  tags={tags}
   allCategories={allCategories}
   pageIndex={currentPageIndex}
   pageCount={pageCount}

@@ -11,12 +11,7 @@ import {
   urlFor,
 } from "@lib/sanity";
 import { slugify, upperHumanize } from "@lib/textConverter";
-import {
-  FaRegCalendarAlt,
-  FaRegFolder,
-  FaRegUserCircle,
-  FaHashtag,
-} from "react-icons/fa";
+import { FaRegCalendarAlt, FaRegFolder, FaRegUserCircle } from "react-icons/fa";
 
 export async function getStaticPaths() {
   return await getSanityPostSlugs();
@@ -98,18 +93,6 @@ const imageUrl = post.mainImage
                           </a>
                         ),
                     )}
-                  </li>
-                )
-              }
-              {
-                post.tags && (
-                  <li class="mr-1 inline-block">
-                    {post.tags.map((tag) => (
-                      <a href={`/blog/tags/${slugify(tag)}`}>
-                        <FaHashtag className={"ml-2 -mt-1 inline-block"} />
-                        {tag}
-                      </a>
-                    ))}
                   </li>
                 )
               }

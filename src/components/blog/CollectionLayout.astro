@@ -10,7 +10,6 @@ interface Props {
   title: string;
   description?: string;
   entries: SanityPostListItem[];
-  tags: string[];
   categories: string[];
   allCategories: string[];
   pageIndex: number;
@@ -21,7 +20,6 @@ const {
   title,
   description,
   entries,
-  tags,
   categories,
   allCategories,
   pageIndex,
@@ -32,10 +30,12 @@ const {
 <BaseLayout title={title} description={description}>
   <PageHeader title={title} />
   <section class="section">
-    <div class="flex container">
-      <div class="row px-0 mx-0 w-full">
+    <div class="container">
+      <div
+        class="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_180px] xl:grid-cols-[minmax(0,1fr)_200px]"
+      >
         <!-- blog posts -->
-        <div class="col-12 lg:col-8 lg:p-0">
+        <div>
           {
             entries.length > 0 ? (
               entries.map((entry) => (
@@ -57,13 +57,9 @@ const {
         </div>
         <!-- sidebar -->
         <div
-          class="hidden lg:col-4 lg:flex max-h-static_sidemenu sticky p-0 pl-4 top-[4rem]"
+          class="hidden lg:block max-h-static_sidemenu sticky p-0 top-[4rem]"
         >
-          <BlogSidebar
-            tags={tags}
-            categories={categories}
-            allCategories={allCategories}
-          />
+          <BlogSidebar categories={categories} allCategories={allCategories} />
         </div>
       </div>
     </div>

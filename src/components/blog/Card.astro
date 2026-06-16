@@ -39,18 +39,6 @@ const entryDate = publishedAt ? formatDate(publishedAt) : null;
           </li>
         )
       }
-      <!-- { tags && (
-        <li class="mr-0 inline-block">
-          {
-            tags.map((tag: string, index: number) => (
-              <a href={`/blog/tags/${slugify(tag)}`}>
-                <FaHashtag className={"ml-2 -mt-1 inline-block"} />
-                {lowerHumanize(tag)}
-              </a>
-            ))
-          }
-        </li>
-      )} -->
       {
         entryDate && (
           <li class="mr-0 inline-block">

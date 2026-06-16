@@ -26,7 +26,6 @@ export type SanityPostListItem = {
   mainImage?: SanityImageSource;
   author?: SanityAuthor;
   categories?: SanityCategory[];
-  tags?: string[];
 };
 
 export type SanityPost = SanityPostListItem & {
@@ -42,8 +41,7 @@ const POSTS_QUERY =
   publishedAt,
   mainImage,
   author->{name, "slug": slug.current},
-  categories[]->{title, "slug": slug.current},
-  tags
+  categories[]->{title, "slug": slug.current}
 }`);
 
 const CATEGORIES_QUERY =
@@ -55,10 +53,6 @@ const CATEGORIES_QUERY =
   "count": count(*[_type == "post" && references(^._id)])
 }`);
 
-const TAGS_QUERY = defineQuery(
-  `array::unique(*[_type == "post" && defined(tags)].tags[])[] | order(@ asc)`,
-);
-
 const POST_SLUGS_QUERY =
   defineQuery(`*[_type == "post" && defined(slug.current)] {
   "params": {"entry": slug.current}
@@ -67,11 +61,6 @@ const POST_SLUGS_QUERY =
 const CATEGORY_SLUGS_QUERY =
   defineQuery(`*[_type == "category" && defined(slug.current)] {
   "params": {"category": slug.current}
-}`);
-
-const TAG_SLUGS_QUERY =
-  defineQuery(`array::unique(*[_type == "post" && defined(tags)].tags[])[] {
-  "params": {"tag": @}
 }`);
 
 const POST_QUERY = defineQuery(`*[_type == "post" && slug.current == $slug][0] {
@@ -83,8 +72,7 @@ const POST_QUERY = defineQuery(`*[_type == "post" && slug.current == $slug][0] {
   mainImage,
   body,
   author->{name, "slug": slug.current},
-  categories[]->{title, "slug": slug.current},
-  tags
+  categories[]->{title, "slug": slug.current}
 }`);
 
 const POSTS_BY_CATEGORY_QUERY = defineQuery(`*[
@@ -99,24 +87,7 @@ const POSTS_BY_CATEGORY_QUERY = defineQuery(`*[
   publishedAt,
   mainImage,
   author->{name, "slug": slug.current},
-  categories[]->{title, "slug": slug.current},
-  tags
-}`);
-
-const POSTS_BY_TAG_QUERY = defineQuery(`*[
-  _type == "post" &&
-  defined(slug.current) &&
-  $tag in tags[]
-] | order(publishedAt desc, _createdAt desc) {
-  _id,
-  title,
-  "slug": slug.current,
-  description,
-  publishedAt,
-  mainImage,
-  author->{name, "slug": slug.current},
-  categories[]->{title, "slug": slug.current},
-  tags
+  categories[]->{title, "slug": slug.current}
 }`);
 
 export function urlFor(source: SanityImageSource) {
@@ -133,10 +104,6 @@ export async function getSanityCategories() {
   );
 }
 
-export async function getSanityTags() {
-  return await sanityClient.fetch<string[]>(TAGS_QUERY);
-}
-
 export async function getSanityPostSlugs() {
   return await sanityClient.fetch<{ params: { entry: string } }[]>(
     POST_SLUGS_QUERY,
@@ -149,12 +116,6 @@ export async function getSanityCategorySlugs() {
   );
 }
 
-export async function getSanityTagSlugs() {
-  return await sanityClient.fetch<{ params: { tag: string } }[]>(
-    TAG_SLUGS_QUERY,
-  );
-}
-
 export async function getSanityPost(slug: string) {
   return await sanityClient.fetch<SanityPost | null>(POST_QUERY, { slug });
 }
@@ -164,10 +125,4 @@ export async function getSanityPostsByCategory(category: string) {
     POSTS_BY_CATEGORY_QUERY,
     { category },
   );
-}
-
-export async function getSanityPostsByTag(tag: string) {
-  return await sanityClient.fetch<SanityPostListItem[]>(POSTS_BY_TAG_QUERY, {
-    tag,
-  });
 }
