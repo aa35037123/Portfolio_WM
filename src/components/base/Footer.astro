@@ -1,25 +1,41 @@
 ---
 import Social from "@components/common/Social.astro";
+import { getSanitySiteAuthor } from "@lib/sanity";
+import type { SocialLinks } from "@/types";
+
+const fallbackSocialLinks: SocialLinks = {
+  email: "weichehsu@utexas.edu",
+  github: "https://github.com/aa35037123",
+  linkedIn: "https://www.linkedin.com/in/wesleyshii",
+};
+
+const author = await Promise.race([
+  getSanitySiteAuthor(),
+  new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500)),
+]).catch(() => null);
+const socialLinks = {
+  ...fallbackSocialLinks,
+  ...Object.fromEntries(
+    Object.entries(author?.social ?? {}).filter(([, value]) => Boolean(value)),
+  ),
+} as SocialLinks;
 ---
 
-<footer class="glass container lg:my-4 lg:rounded-lg intersect:animate-fadeUp opacity-0">
+<footer
+  class="glass container lg:my-4 lg:rounded-lg intersect:animate-fadeUp opacity-0"
+>
   <div class="row py-2 lg:py-0 items-center flex-wrap-reverse">
     <div class="text-center lg:col-6 lg:mb-0 lg:text-left">
       <ul>
         <li class="m-2 inline-block">
-          <a href="/terms">&copy; Jane Doe 2025</a>
+          <a href="/terms">&copy; Wei Che Hsu 2026</a>
         </li>
       </ul>
     </div>
-    <div class="text-center lg:col-6 lg:my-0 flex items-center justify-center lg:justify-end">
-      <Social
-        links={{
-          facebook: "https://www.facebook.com/",
-          github: "https://www.github.com/",
-          instagram: "https://www.instagram.com/",
-          linkedIn: "https://www.linkedin.com/",
-        }}
-      />
+    <div
+      class="text-center lg:col-6 lg:my-0 flex items-center justify-center lg:justify-end"
+    >
+      <Social links={socialLinks} />
     </div>
   </div>
 </footer>

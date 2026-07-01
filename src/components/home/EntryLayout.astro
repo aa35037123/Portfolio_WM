@@ -3,41 +3,65 @@ import BaseLayout from "@components/base/BaseLayout.astro";
 import { markdownify } from "@lib/textConverter";
 import Button from "@components/common/Button.astro";
 import CursorTrail from "@components/home/CursorTrail.astro";
-import type { HomeEntry } from "@/types";
+import Social from "@components/common/Social.astro";
+import { formatDate } from "@lib/formatDate";
+import {
+  urlFor,
+  type SanityAuthor,
+  type SanityPostListItem,
+} from "@lib/sanity";
+import type { HomeEntry, PortfolioEntry, SocialLinks } from "@/types";
 import { Image } from "astro:assets";
+import { PortableText } from "astro-portabletext";
+import { FaArrowRight, FaRegCalendarAlt, FaGithub } from "react-icons/fa";
 
 interface Props {
   entry: HomeEntry;
+  author: SanityAuthor | null;
+  projects: PortfolioEntry["data"]["projects"];
+  posts: SanityPostListItem[];
 }
 
-const { entry } = Astro.props;
-const { image, imageAlt, title, content, button } = entry.data;
+const { entry, author, projects, posts } = Astro.props;
+const {
+  image,
+  imageAlt,
+  title,
+  content,
+  button,
+  introTitle,
+  projectZoneTitle,
+  blogZoneTitle,
+} = entry.data;
+const authorImageUrl = author?.image
+  ? urlFor(author.image).width(640).height(640).fit("crop").auto("format").url()
+  : null;
+const authorBio = author?.bio;
+const authorSocial = author?.social
+  ? Object.fromEntries(
+      Object.entries(author.social).filter(([, value]) => Boolean(value)),
+    ) as SocialLinks
+  : undefined;
 ---
 
-<BaseLayout>
+<BaseLayout title={title} description={content}>
   <CursorTrail />
-  <!-- Banner -->
-  <section class="section">
-    <div class="container">
-      <div class="row justify-center">
-        <div class="text-center lg:col-6">
-          {
-            image && (
-              <div class="blur-[0px]">
-                <Image
-                class="mb-6 w-64"
-                src={image}
-                alt={imageAlt}
-                width={1024}
-                height={1024}
-                loading="eager"
-              />
-              </div>
-              
-            )
-          }
-          <h1 set:html={markdownify(title)} class="mb-4" />
-          <p set:html={markdownify(content)} class="mb-8" />
+  <section class="section-sm">
+    <div class="container max-w-6xl">
+      <h2 class="h3 mb-5">{introTitle}</h2>
+      <div
+        class="glass grid items-center gap-8 rounded-lg p-5 md:grid-cols-[1fr_18rem] md:p-8 lg:p-10"
+      >
+        <div>
+          <div class="mb-6 max-w-2xl text-lg leading-8">
+            {
+              Array.isArray(authorBio) ? (
+                <PortableText value={authorBio} />
+              ) : (
+                <p>{authorBio ?? content}</p>
+              )
+            }
+          </div>
           {
             button && (
               <Button
@@ -49,7 +73,159 @@ const { image, imageAlt, title, content, button } = entry.data;
               />
             )
           }
+          {
+            authorSocial && Object.keys(authorSocial).length > 0 && (
+              <div class="mt-5">
+                <Social links={authorSocial} />
+              </div>
+            )
+          }
         </div>
+
+        {
+          authorImageUrl ? (
+            <div class="justify-self-center md:justify-self-end">
+              <img
+                class="aspect-square w-56 rounded-lg object-cover shadow-lg md:w-72"
+                src={authorImageUrl}
+                alt={author?.name ?? imageAlt}
+                loading="eager"
+              />
+            </div>
+          ) : (
+            image && (
+              <div class="justify-self-center md:justify-self-end">
+                <Image
+                  class="aspect-square w-56 rounded-lg object-cover shadow-lg md:w-72"
+                  src={image}
+                  alt={imageAlt}
+                  width={640}
+                  height={640}
+                  loading="eager"
+                />
+              </div>
+            )
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sm pt-0">
+    <div class="container max-w-6xl">
+      <div class="mb-5 flex items-end justify-between gap-4">
+        <h2 class="h3">{projectZoneTitle}</h2>
+        <a
+          href="/portfolio"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-txt-p dark:text-darkmode-txt-p"
+        >
+          Projects
+          <FaArrowRight className="h-3 w-3" />
+        </a>
+      </div>
+
+      <ul class="grid gap-4 md:grid-cols-3">
+        {
+          projects.map((project) => (
+            <li class="glass rounded-lg p-4">
+              <div class="mb-4 flex items-start gap-4">
+                <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-bg-t text-xl font-bold text-txt-p dark:bg-darkmode-bg-t dark:text-darkmode-txt-p">
+                  {project.title
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((word) => word[0])
+                    .join("")}
+                </div>
+                <div class="min-w-0">
+                  <h3
+                    set:html={markdownify(project.title)}
+                    class="mb-2 text-h4"
+                  />
+                  {project.github && (
+                    <a
+                      aria-label={`${project.title} Github`}
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      class="inline-flex items-center gap-2 text-sm font-semibold"
+                    >
+                      <FaGithub className="h-4 w-4" />
+                      Source
+                    </a>
+                  )}
+                </div>
+              </div>
+              {project.content?.[0] && (
+                <p
+                  set:html={markdownify(project.content[0])}
+                  class="line-clamp-3 text-base leading-7"
+                />
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-sm pt-0">
+    <div class="container max-w-6xl">
+      <div class="mb-5 flex items-end justify-between gap-4">
+        <h2 class="h3">{blogZoneTitle}</h2>
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-txt-p dark:text-darkmode-txt-p"
+        >
+          Blog
+          <FaArrowRight className="h-3 w-3" />
+        </a>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        {
+          posts.map((post) => {
+            const imageUrl = post.mainImage
+              ? urlFor(post.mainImage)
+                  .width(640)
+                  .height(420)
+                  .fit("crop")
+                  .auto("format")
+                  .url()
+              : null;
+            const postDate = post.publishedAt
+              ? formatDate(post.publishedAt)
+              : null;
+
+            return (
+              <article class="glass flex h-full flex-col overflow-hidden rounded-lg">
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt=""
+                    class="aspect-[16/10] w-full object-cover"
+                    loading="lazy"
+                  />
+                )}
+                <div class="flex flex-1 flex-col p-4">
+                  {postDate && (
+                    <p class="mb-3 inline-flex items-center gap-2 text-sm text-txt-light dark:text-darkmode-txt-light">
+                      <FaRegCalendarAlt className="h-3 w-3" />
+                      {postDate}
+                    </p>
+                  )}
+                  <h3 class="mb-3 text-h4">
+                    <a href={`/blog/${post.slug}`}>{post.title}</a>
+                  </h3>
+                  {post.description && (
+                    <p class="line-clamp-3 text-base leading-7">
+                      {post.description}
+                    </p>
+                  )}
+                </div>
+              </article>
+            );
+          })
+        }
       </div>
     </div>
   </section>

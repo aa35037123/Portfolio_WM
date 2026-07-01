@@ -1,13 +1,20 @@
 import { createImageUrlBuilder } from "@sanity/image-url";
 import { defineQuery } from "groq";
 import { sanityClient } from "sanity:client";
+import type { SocialLinks } from "@/types";
 
 const builder = createImageUrlBuilder(sanityClient);
 type SanityImageSource = Parameters<typeof builder.image>[0];
+const SITE_AUTHOR_NAME = "Wei Che Hsu";
+let siteAuthorPromise: Promise<SanityAuthor | null> | undefined;
 
 export type SanityAuthor = {
+  _id?: string;
   name?: string;
   slug?: string;
+  bio?: any[] | string;
+  image?: SanityImageSource;
+  social?: SocialLinks;
 };
 
 export type SanityCategory = {
@@ -51,6 +58,20 @@ const CATEGORIES_QUERY =
   "slug": slug.current,
   description,
   "count": count(*[_type == "post" && references(^._id)])
+}`);
+
+const AUTHOR_BY_NAME_QUERY =
+  defineQuery(`*[_type == "author" && name == $name][0] {
+  _id,
+  name,
+  "slug": slug.current,
+  bio,
+  image,
+  "social": {
+    "email": coalesce(contact.email, email, social.email),
+    "github": coalesce(contact.github, github, social.github),
+    "linkedIn": coalesce(contact.linkedin, contact.linkedIn, linkedIn, linkedin, social.linkedIn, social.linkedin)
+  }
 }`);
 
 const POST_SLUGS_QUERY =
@@ -102,6 +123,17 @@ export async function getSanityCategories() {
   return await sanityClient.fetch<(SanityCategory & { count: number })[]>(
     CATEGORIES_QUERY,
   );
+}
+
+export async function getSanityAuthorByName(name: string) {
+  return await sanityClient.fetch<SanityAuthor | null>(AUTHOR_BY_NAME_QUERY, {
+    name,
+  });
+}
+
+export function getSanitySiteAuthor() {
+  siteAuthorPromise ??= getSanityAuthorByName(SITE_AUTHOR_NAME);
+  return siteAuthorPromise;
 }
 
 export async function getSanityPostSlugs() {

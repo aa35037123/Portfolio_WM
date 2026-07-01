@@ -83,6 +83,11 @@ const home = defineCollection({
       imageAlt: z.string().default(""),
       title: z.string(),
       content: z.string(),
+      introTitle: z.string().default("About me"),
+      projectZoneTitle: z.string().default("Project Zone"),
+      blogZoneTitle: z.string().default("Blog Zone"),
+      selectedProjects: z.array(z.string()).default([]),
+      selectedPosts: z.array(z.string()).default([]),
       button: z
         .object({
           label: z.string(),

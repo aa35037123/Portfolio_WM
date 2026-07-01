@@ -1,9 +1,36 @@
 ---
 import { getIndex } from "@lib/contentParser";
 import EntryLayout from "@components/home/EntryLayout.astro";
-import type { HomeEntry } from "@/types";
+import { getSanityAuthorByName, getSanityPosts } from "@lib/sanity";
+import type { HomeEntry, PortfolioEntry } from "@/types";
 
 const entry = (await getIndex("home")) as HomeEntry;
+const portfolio = (await getIndex("portfolio")) as PortfolioEntry;
+const author = await Promise.race([
+  getSanityAuthorByName("Wei Che Hsu"),
+  new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500)),
+]).catch(() => null);
+const posts = await Promise.race([
+  getSanityPosts(),
+  new Promise<[]>((resolve) => setTimeout(() => resolve([]), 1500)),
+]).catch(() => []);
+
+const selectedProjectTitles = entry.data.selectedProjects ?? [];
+const selectedProjects = selectedProjectTitles.length
+  ? portfolio.data.projects.filter((project) =>
+      selectedProjectTitles.includes(project.title),
+    )
+  : portfolio.data.projects.slice(0, 3);
+
+const selectedPostSlugs = entry.data.selectedPosts ?? [];
+const selectedPosts = selectedPostSlugs.length
+  ? posts.filter((post) => post.slug && selectedPostSlugs.includes(post.slug))
+  : posts.slice(0, 3);
 ---
 
-<EntryLayout entry={entry} />
+<EntryLayout
+  entry={entry}
+  author={author}
+  projects={selectedProjects}
+  posts={selectedPosts}
+/>
