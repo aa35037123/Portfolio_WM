@@ -3,7 +3,6 @@ title:
 description:
 image: "@assets/recipes/.jpg"
 imageAlt:
-author:
 prepTime: 0
 servings: 0
 diet:

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "portfolio-wm",
+  "name": "portfolio-wmk7",
   // Update to today's date
   "compatibility_date": "2026-06-14",
   "assets": {

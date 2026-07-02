@@ -12,17 +12,15 @@ import { Image } from "astro:assets";
 import {
   FaRegCalendarAlt,
   FaRegFolder,
-  FaRegUserCircle,
   FaHashtag,
   FaRegClock,
 } from "react-icons/fa";
-import type { GenericEntry, EntryReference } from "@/types";
+import type { GenericEntry } from "@/types";
 
 interface EntryData {
   title: string;
   image?: string;
   imageAlt?: string;
-  author?: EntryReference;
   date?: string;
   pubDate?: string;
   modDate?: string;
@@ -36,7 +34,6 @@ interface Props {
   showInfo?: boolean;
   showImage?: boolean;
   showTitle?: boolean;
-  showAuthor?: boolean;
   showDate?: boolean;
   showPubDate?: boolean;
   showModDate?: boolean;
@@ -49,7 +46,6 @@ const {
   entry,
   showInfo = true,
   showImage = false,
-  showAuthor = false,
   showDate = false,
   showPubDate = false,
   showModDate = false,
@@ -60,7 +56,6 @@ const {
 
 const {
   title,
-  author,
   categories,
   tags,
   image,
@@ -95,14 +90,6 @@ tags?.sort((a: string, b: string) => a.localeCompare(b));
       <div class="glass mb-8 p-4 rounded-lg intersect:animate-fade opacity-0 intersect-no-queue">
         <h1 set:html={markdownify(title)} class="mb-4" />
         <ul>
-          {author && showAuthor && (
-            <li class="mr-1 inline-block">
-              <a href={`/authors/${slugify(author.id)}`}>
-                <FaRegUserCircle className={"-mt-1 inline-block"} />
-                {upperHumanize(author.id)}
-              </a>
-            </li>
-          )}
           {date && showDate && (
             <li class="mr-1 inline-block">
               <FaRegCalendarAlt className={"ml-2 -mt-1 inline-block"} />

@@ -24,6 +24,9 @@ const siteDescription = "Astrogon is a simple and elegant Astro theme.";
 const siteImage = "@assets/og-image.png";
 const siteAuthor = "Jane Doe";
 const baseUrl = "https://janedoe.com";
+const resolvedImage = image?.startsWith("http")
+  ? image
+  : `${baseUrl}${image ? image : siteImage}`;
 ---
 
 <!DOCTYPE html>
@@ -94,7 +97,7 @@ const baseUrl = "https://janedoe.com";
     />
     <meta
       property="og:image"
-      content={`${baseUrl}${image ? image : siteImage}`}
+      content={resolvedImage}
     />
 
     <meta name="twitter:title" content={plainify(title ? title : siteTitle)} />
@@ -104,7 +107,7 @@ const baseUrl = "https://janedoe.com";
     />
     <meta
       name="twitter:image"
-      content={`${baseUrl}${image ? image : siteImage}`}
+      content={resolvedImage}
     />
     <meta name="twitter:card" content="summary_large_image" />
 

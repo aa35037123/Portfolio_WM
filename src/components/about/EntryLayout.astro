@@ -2,29 +2,43 @@
 import BaseLayout from "@components/base/BaseLayout.astro";
 import { markdownify } from "@lib/textConverter";
 import { Image } from "astro:assets";
-import type { AboutEntry } from "@/types";
-import { render } from "astro:content";
+import { PortableText } from "astro-portabletext";
+import type { ImageMetadata } from "astro";
 
 interface Props {
-  entry: AboutEntry;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  localImage?: ImageMetadata;
+  imageAlt?: string;
+  body?: unknown[];
 }
 
-const { entry } = Astro.props;
-const { title, description, image, imageAlt } = entry.data;
-const { Content } = await render(entry);
+const { title, description = "", imageUrl, localImage, imageAlt = "", body } = Astro.props;
+const metaImage = imageUrl ?? localImage?.src;
 ---
 
-<BaseLayout title={title} description={description} image={image?.src}>
+<BaseLayout title={title} description={description} image={metaImage}>
   <section class="section-sm">
     <div class="container">
       <div class="row justify-center">
         <div class="glass rounded-lg text-center p-8 md:col-10 lg:col-7 intersect:animate-fadeUp opacity-0 intersect-no-queue">
           {
-            image && (
+            imageUrl ? (
+              <img
+                class="mx-auto mb-6 w-64 rounded-lg"
+                src={imageUrl}
+                alt={imageAlt || title}
+                width="1024"
+                height="1024"
+                loading="eager"
+                decoding="async"
+              />
+            ) : localImage && (
               <Image
-                class="mx-auto mb-6 rounded-lg w-64"
-                src={image}
-                alt={imageAlt}
+                class="mx-auto mb-6 w-64 rounded-lg"
+                src={localImage}
+                alt={imageAlt || title}
                 width={1024}
                 height={1024}
                 loading="eager"
@@ -32,7 +46,9 @@ const { Content } = await render(entry);
             )
           }
           <h2 set:html={markdownify(title)} class="h3 mb-6" />
-            <Content />
+          <div class="content text-left">
+            {body?.length ? <PortableText value={body} /> : <slot />}
+          </div>
         </div>
       </div>
     </div>

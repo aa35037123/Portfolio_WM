@@ -4,22 +4,17 @@ import type { MarkdownHeading } from "astro";
 export type GenericEntry = CollectionEntry<CollectionKey>;
 
 export type AboutEntry = CollectionEntry<"about">;
-export type AuthorsEntry = CollectionEntry<"authors">;
 export type BlogEntry = CollectionEntry<"blog">;
 export type DocsEntry = CollectionEntry<"docs">;
 export type HomeEntry = CollectionEntry<"home">;
-export type IndexCardsEntry = CollectionEntry<"indexCards">;
-export type PoetryEntry = CollectionEntry<"poetry">;
 export type PortfolioEntry = CollectionEntry<"portfolio">;
 export type RecipesEntry = CollectionEntry<"recipes">;
 export type TermsEntry = CollectionEntry<"terms">;
 
 export type SearchableEntry =
   | AboutEntry
-  | AuthorsEntry
   | BlogEntry
   | DocsEntry
-  | PoetryEntry
   | PortfolioEntry
   | RecipesEntry
   | TermsEntry;
@@ -36,11 +31,6 @@ export type SocialLinks = {
   website?: string;
   youtube?: string;
 }
-
-export type EntryReference = {
-  id: string;
-  collection: string;
-};
 
 // Define heading hierarchy so that we can generate ToC
 export interface HeadingHierarchy extends MarkdownHeading {

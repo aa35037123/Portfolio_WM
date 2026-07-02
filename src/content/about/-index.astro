@@ -1,0 +1,40 @@
+---
+// src/pages/about.astro (或 src/pages/about/index.astro)
+import { sanityClient } from "@lib/sanity";
+
+// 使用 GROQ 語法去 Sanity 撈取 type 為 'about' 的那一筆資料
+const aboutData = await sanityClient.fetch(`*[_type == "about"][0]`);
+
+// 萬一後台還沒填資料，先做個防呆安全機制
+if (!aboutData) {
+  console.error("在 Sanity 後台找不到 About Me 的資料，請確認是否有按下 Publish！");
+}
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{aboutData?.title || "About Me"}</title>
+    <meta name="description" content={aboutData?.description} />
+  </head>
+  <body>
+    <main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+      
+      <h1>{aboutData?.title}</h1>
+      <p style="color: #666; font-style: italic;">{aboutData?.description}</p>
+
+      {aboutData?.image && (
+        <img 
+          src={aboutData.image.asset._ref /* 註：這裡稍後需要用 urlFor 轉換，先簡單示意 */} 
+          alt="Ching" 
+          style="max-width: 100%; height: auto; border-radius: 8px;"
+        />
+      )}
+
+      <article>
+        {aboutData?.body ? JSON.stringify(aboutData.body) : "暫無內文"}
+      </article>
+
+    </main>
+  </body>
+</html>

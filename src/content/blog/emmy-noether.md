@@ -5,7 +5,6 @@ date: 2024-11-25
 image: "@assets/blog/emmy-noether.jpg"
 imageAlt: Profile of Emmy Noether
 categories: [Mathematics]
-author: jane-doe
 tags: [biography, algebra]
 ---
 

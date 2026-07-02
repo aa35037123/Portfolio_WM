@@ -63,9 +63,6 @@ make preview
   - Toggleable **Table of Contents** sidebar
 - Recipes
   - Demonstrates a highly **templated structure**
-- Authors - A collection that can **link entries across collections** by the Author field
-- Poetry - A trim interface for a lightweight collection, demonstrating pagination over the content pages
-- Index Cards - A variation on the "Poetry" layout, where all content is kept in a single file, and displayed in a single page
 - And more:
   - Homepage
   - About/Bio

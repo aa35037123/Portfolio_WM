@@ -2,8 +2,46 @@
 import type { AboutEntry } from "@/types";
 import EntryLayout from "@components/about/EntryLayout.astro";
 import { getIndex } from "@lib/contentParser";
+import { sanityClient } from "@lib/sanity";
+import { defineQuery } from "groq";
+import { createImageUrlBuilder } from "@sanity/image-url";
+import { render } from "astro:content";
 
-const entry = (await getIndex("about")) as AboutEntry;
+const ABOUT_QUERY = defineQuery(/* groq */ `
+  *[_type == "about"][0] {
+    title,
+    description,
+    image,
+    body
+  }
+`);
+
+const localEntry = (await getIndex("about")) as AboutEntry;
+const { Content } = await render(localEntry);
+
+let about = null;
+try {
+  about = await sanityClient.fetch(ABOUT_QUERY);
+} catch (error) {
+  console.warn("Failed to fetch Sanity about document. Falling back to local about content.", error);
+}
+
+const imageBuilder = createImageUrlBuilder(sanityClient);
+const imageUrl = about?.image
+  ? imageBuilder.image(about.image).width(1024).height(1024).fit("crop").url()
+  : undefined;
+
+const title = about?.title ?? localEntry.data.title;
+const description = about?.description ?? localEntry.data.description ?? "";
 ---
 
-<EntryLayout entry={entry} />
+<EntryLayout
+  title={title}
+  description={description}
+  imageUrl={imageUrl}
+  localImage={imageUrl ? undefined : localEntry.data.image}
+  imageAlt={localEntry.data.imageAlt}
+  body={about?.body}
+>
+  <Content />
+</EntryLayout>
