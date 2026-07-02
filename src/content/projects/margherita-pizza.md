@@ -1,7 +1,7 @@
 ---
 title: Classic Margherita Pizza
 description: A simple, authentic Italian-style pizza with fresh ingredients and a perfect crispy crust.
-image: "@assets/recipes/margherita-pizza.jpg"
+image: "@assets/projects/margherita-pizza.jpg"
 prepTime: 60
 servings: 2
 diet: Vegetarian

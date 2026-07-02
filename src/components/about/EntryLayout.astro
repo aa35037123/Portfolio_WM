@@ -16,6 +16,21 @@ interface Props {
 
 const { title, description = "", imageUrl, localImage, imageAlt = "", body } = Astro.props;
 const metaImage = imageUrl ?? localImage?.src;
+
+const beyondWorkCategories = [
+  {
+    title: "Drama",
+    description: "Stage moments, rehearsals, and stories I got to step inside.",
+  },
+  {
+    title: "Singing",
+    description: "Covers, vocal experiments, and songs I keep returning to.",
+  },
+  {
+    title: "Through Their Lens",
+    description: "Photos friends took of me, from planned shoots to passing moments.",
+  },
+];
 ---
 
 <BaseLayout title={title} description={description} image={metaImage}>
@@ -48,6 +63,34 @@ const metaImage = imageUrl ?? localImage?.src;
           <h2 set:html={markdownify(title)} class="h3 mb-6" />
           <div class="content text-left">
             {body?.length ? <PortableText value={body} /> : <slot />}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section-sm pt-0">
+    <div class="container">
+      <div class="row justify-center">
+        <div class="md:col-10 lg:col-7">
+          <div class="mb-6 text-center">
+            <h2 class="h3 mb-2">Beyond Work</h2>
+            <p class="text-txt-light dark:text-darkmode-txt-light">
+              Things I do because they keep me curious, expressive, and human.
+            </p>
+          </div>
+          <div class="row">
+            {
+              beyondWorkCategories.map((category) => (
+                <div class="md:col-4 p-2">
+                  <article class="glass h-full rounded-lg p-5 text-center intersect:animate-fadeUp opacity-0">
+                    <h3 class="h4 mb-3">{category.title}</h3>
+                    <p class="text-sm text-txt-light dark:text-darkmode-txt-light">
+                      {category.description}
+                    </p>
+                  </article>
+                </div>
+              ))
+            }
           </div>
         </div>
       </div>

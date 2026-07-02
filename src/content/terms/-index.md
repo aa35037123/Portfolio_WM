@@ -4,39 +4,17 @@ title: Terms & Conditions
 
 ## Copyright
 
-&copy; 2025 Jane Doe. All rights reserved.
+&copy; 2026 Ching. All rights reserved.
 
-## Reuse
+## Content & Code Protection
 
-### Source Code
+### Source Code & Design
 
-The source code for janedoe.com is protected under the MIT License. In short, you can do as you see fit, so long as you include the original copyright notice in any copy of the software.
+The custom design, source code variations, and layout of this website are proprietary. Although the repository is publicly visible on GitHub for deployment purposes, **no permission is granted** for anyone to copy, modify, redistribute, or reuse any part of the custom codebase or visual styling for their own personal or commercial projects.
 
-```md
-The MIT License (MIT)
+### Content & Media
 
-Copyright (c) 2025 Jane Doe
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-### Content
-
-It is not permitted to mirror or re-publish the content of this website. That includes, for example, the words and images displayed on it. Write your own blog.
+It is strictly prohibited to mirror, copy, or re-publish any content displayed on this website, including but not limited to text, blog posts, images, and artwork. All rights to the media and content belong to the original owner.
 
 ## Terms
 
@@ -47,12 +25,13 @@ It is not permitted to mirror or re-publish the content of this website. That in
 
 ## Attributions
 
-This source code is derivative of [Astrogon](https://github.com/astrogon/astrogon) by [Reed Nelson](https://github.com/reednel), which uses the license below.
+This website is built using a modified template derived from [Astrogon](https://github.com/astrogon/astrogon) by [Reed Nelson](https://github.com/reednel), which originally used the license below. 
 
 ```md
 The MIT License (MIT)
 
 Copyright (c) 2025 Reed Nelson
+Copyright (c) 2025 Jane Doe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -62,11 +41,3 @@ copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```

@@ -1,5 +1,5 @@
 ---
-import type { RecipesEntry } from "@/types";
+import type { ProjectsEntry } from "@/types";
 import Share from "@components/common/Share.astro";
 import { Image } from "astro:assets";
 import BaseLayout from "@components/base/BaseLayout.astro";
@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 
 interface Props {
-  entry: RecipesEntry;
+  entry: ProjectsEntry;
 }
 
 const { entry } = Astro.props;
@@ -167,7 +167,7 @@ const {
           <Share
             title={title}
             description={description}
-            folder="recipes"
+            folder="projects"
             id={entry.id}
           />
         </div>

@@ -61,7 +61,7 @@ make preview
   - **Multi-level** document structure
   - Toggleable **Doc Browser** sidebar
   - Toggleable **Table of Contents** sidebar
-- Recipes
+- Projects
   - Demonstrates a highly **templated structure**
 - And more:
   - Homepage

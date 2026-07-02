@@ -1,11 +1,11 @@
 ---
 import { getIndex, getEntries } from "@lib/contentParser";
 import { sortByDate } from "@lib/sortFunctions";
-import type { RecipesEntry } from "@/types";
-import CollectionLayout from "@components/recipes/CollectionLayout.astro";
+import type { ProjectsEntry } from "@/types";
+import CollectionLayout from "@components/projects/CollectionLayout.astro";
 
-const entryIndex = (await getIndex("recipes")) as RecipesEntry;
-const entries = (await getEntries("recipes", sortByDate)) as RecipesEntry[];
+const entryIndex = (await getIndex("projects")) as ProjectsEntry;
+const entries = (await getEntries("projects", sortByDate)) as ProjectsEntry[];
 
 const { slug } = Astro.params;
 
@@ -17,7 +17,7 @@ const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
 const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
 
 export async function getStaticPaths() {
-  const entries = (await getEntries("recipes", sortByDate)) as RecipesEntry[];
+  const entries = (await getEntries("projects", sortByDate)) as ProjectsEntry[];
   // divisor below must equal entriesPerPage
   const pageCount = Math.ceil(entries.length / 6);
   const paths = [];
