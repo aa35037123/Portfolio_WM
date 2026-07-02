@@ -81,10 +81,10 @@ const portfolio = defineCollection({
   }),
 });
 
-const recipes = defineCollection({
+const projects = defineCollection({
   loader: glob({
     pattern: "**\/[^_]*.{md,mdx}",
-    base: "./src/content/recipes",
+    base: "./src/content/projects",
   }),
   schema: ({ image }) =>
     searchable.extend({
@@ -117,6 +117,6 @@ export const collections = {
   docs,
   home,
   portfolio,
-  recipes,
+  projects,
   terms,
 };

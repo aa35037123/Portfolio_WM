@@ -1,7 +1,7 @@
 ---
 title: Banana Bread
 description: A moist, flavorful banana bread made with overripe bananas, perfect for breakfast or a snack.
-image: "@assets/recipes/banana-bread.jpg"
+image: "@assets/projects/banana-bread.jpg"
 prepTime: 15
 cook_time: 60
 servings: 8
@@ -45,6 +45,6 @@ instructions:
 notes:
   - For a healthier version, substitute half of the butter with Greek yogurt or applesauce.
   - The bread can be stored at room temperature for 2-3 days or in the fridge for up to a week.
-  - This recipe can be easily doubled to make two loaves.
+  - This project can be easily expanded with additional deliverables.
   - If you prefer a sweeter bread, add 1/2 cup of chocolate chips to the batter.
 ---

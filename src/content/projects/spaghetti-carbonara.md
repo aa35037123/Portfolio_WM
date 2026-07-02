@@ -1,7 +1,7 @@
 ---
 title: Spaghetti Carbonara
 description: A classic Italian pasta dish featuring creamy eggs, crispy pancetta, and sharp Pecorino cheese.
-image: "@assets/recipes/spaghetti-carbonara.jpg"
+image: "@assets/projects/spaghetti-carbonara.jpg"
 prepTime: 30
 servings: 4
 
